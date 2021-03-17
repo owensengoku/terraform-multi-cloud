@@ -1,15 +1,6 @@
-resource "azurecaf_name" "frontdoor" {
-  name          = var.settings.name
-  resource_type = "azurerm_frontdoor"
-  prefixes      = try(var.settings.global_settings.prefix, var.global_settings.prefix)
-  random_length = try(var.settings.global_settings.random_lenght, var.global_settings.random_length)
-  clean_input   = true
-  passthrough   = try(var.settings.global_settings.passthrough, var.global_settings.passthrough)
-  use_slug      = try(var.settings.global_settings.use_slug, var.global_settings.use_slug)
-}
 
 resource "azurerm_frontdoor" "frontdoor" {
-  name                                         = azurecaf_name.frontdoor.result
+  name                                         = var.settings.name
   resource_group_name                          = var.resource_group_name
   enforce_backend_pools_certificate_name_check = try(var.settings.certificate_name_check, false)
   tags                                         = local.tags
@@ -112,7 +103,7 @@ resource "azurerm_frontdoor" "frontdoor" {
 
     content {
       name                                    = frontend_endpoint.value.name
-      host_name                               = try(frontend_endpoint.value.host_name, format("%s.azurefd.net", azurecaf_name.frontdoor.result))
+      host_name                               = frontend_endpoint.value.host_name, format("%s.azurefd.net", var.settings.name))
       session_affinity_enabled                = frontend_endpoint.value.session_affinity_enabled
       session_affinity_ttl_seconds            = frontend_endpoint.value.session_affinity_ttl_seconds
       custom_https_provisioning_enabled       = try(frontend_endpoint.value.custom_https_provisioning_enabled, false)

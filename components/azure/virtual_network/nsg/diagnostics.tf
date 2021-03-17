@@ -1,6 +1,6 @@
 
 module diagnostics {
-  source = "../../../diagnostics"
+  source = "../../diagnostics"
   for_each = {
     for key, subnet in var.subnets : key => subnet
     if try(var.network_security_group_definition[subnet.nsg_key].diagnostic_profiles, null) != null

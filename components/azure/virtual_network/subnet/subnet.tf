@@ -1,17 +1,7 @@
-resource "azurecaf_name" "subnet" {
-
-  name          = var.name
-  resource_type = "azurerm_subnet"
-  prefixes      = var.global_settings.prefix
-  random_length = var.global_settings.random_length
-  clean_input   = true
-  passthrough   = (var.name == "AzureBastionSubnet") || (var.name == "AzureFirewallSubnet") || (var.name == "GatewaySubnet") ? true : var.global_settings.passthrough
-  use_slug      = var.global_settings.use_slug
-}
 
 resource "azurerm_subnet" "subnet" {
 
-  name                                           = azurecaf_name.subnet.result
+  name                                           = var.name
   resource_group_name                            = var.resource_group_name
   virtual_network_name                           = var.virtual_network_name
   address_prefixes                               = var.address_prefixes
